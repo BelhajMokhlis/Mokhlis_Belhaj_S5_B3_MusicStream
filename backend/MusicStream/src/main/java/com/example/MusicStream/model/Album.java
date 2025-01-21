@@ -1,6 +1,7 @@
 package com.example.MusicStream.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.*;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Album {
     private String titre;
     private String artiste;
     private Integer annee;
-    
+    private String categorie;
+    @DBRef
     private List<String> chansons = new ArrayList<>();  // List of Song IDs
 } 

@@ -1,83 +1,110 @@
 package com.example.MusicStream.service.impl;
 
-import com.example.MusicStream.dto.request.LoginRequest;
-import com.example.MusicStream.dto.request.UserRequest;
-import com.example.MusicStream.dto.request.UpdateRoleRequest;
-import com.example.MusicStream.dto.response.LoginResponse;
-import com.example.MusicStream.dto.response.UserResponse;
-import com.example.MusicStream.mapper.UserMapper;
-import com.example.MusicStream.model.Role;
-import com.example.MusicStream.model.User;
-import com.example.MusicStream.repository.UserRepository;
-import com.example.MusicStream.service.UserService;
-import com.example.MusicStream.security.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
+import java.util.Collections;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.HashSet;
+
+import com.example.MusicStream.service.UserService;
+import com.example.MusicStream.repository.UserRepository;
+import com.example.MusicStream.service.RoleService;
+import com.example.MusicStream.mapper.UserMapper;
+import com.example.MusicStream.model.Users;
+import com.example.MusicStream.model.Role;
+import com.example.MusicStream.dto.request.UserRequest;
+import com.example.MusicStream.dto.response.UserResponse;
+import com.example.MusicStream.Exception.ResponseException;
+
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private UserMapper userMapper;  
 
     @Autowired
-    private  UserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private  PasswordEncoder passwordEncoder;
-    @Autowired
-    private  AuthenticationManager authenticationManager;
-    @Autowired
-    private  JwtTokenProvider jwtTokenProvider;
+    private PasswordEncoder passwordEncoder;
+
+  
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
 
     @Override
-    public LoginResponse login(LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword())
-        );
+    public Page<UserResponse> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userMapper::toResponse);
+    }
+
+    @Override
+    public UserResponse registerUser(UserRequest request) {
+    
+    	
+        Users user = userMapper.toEntity(request);
         
-        User user = userRepository.findByLogin(request.getLogin())
-            .orElseThrow(() -> new RuntimeException("User not found"));
-            
-        String token = jwtTokenProvider.generateToken(authentication);
-        return new LoginResponse(token, userMapper.toResponse(user));
+        Role role = roleService.findByName("ROLE_USER");
+        user.setRoles(Collections.singletonList(role));
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+
+        user = userRepository.save(user);
+        logger.info("User registered successfully: {}", user.getUsername());
+        return userMapper.toResponse(user);
     }
 
     @Override
-    public UserResponse register(UserRequest request) {
-        if (userRepository.existsByLogin(request.getLogin())) {
-            throw new RuntimeException("Login already exists");
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserResponse assignRoleToUser(String userId, String roleId) {
+        Optional<Users> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+            throw new ResponseException("User not found ", HttpStatus.NOT_FOUND);
         }
-
-        User user = userMapper.toEntity(request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRoles(new HashSet<>());
-        user.addRole(Role.ROLE_USER);
-
-        User savedUser = userRepository.save(user);
-        return userMapper.toResponse(savedUser);
+        Role role = roleService.findById(roleId);
+        
+        if (user.get().getRoles().contains(role)) {
+            throw new ResponseException("User already has role", HttpStatus.BAD_REQUEST);
+        }
+        user.get().getRoles().add(role);
+        return userMapper.toResponse(userRepository.save(user.get()));
     }
 
     @Override
-    public List<UserResponse> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return userMapper.toResponseList(users);
+    public void desassignRoleToUser(String userId, String roleId) {
+        Optional<Users> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+            throw new ResponseException("User not found", HttpStatus.NOT_FOUND);
+        }
+        Role role = roleService.findById(roleId);
+       
+        // cheque si user has role
+        if (!user.get().getRoles().contains(role)) {
+            throw new ResponseException("User does not have role", HttpStatus.BAD_REQUEST);
+        }
+        user.get().getRoles().remove(role);
+        userRepository.save(user.get());
+
     }
 
-    @Override
-    public UserResponse updateUserRoles(String id, UpdateRoleRequest request) {
-        User user = userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("User not found"));
-
-        userMapper.updateRoles(user, request);
-        User updatedUser = userRepository.save(user);
-        return userMapper.toResponse(updatedUser);
-    }
-} 
+  
+}

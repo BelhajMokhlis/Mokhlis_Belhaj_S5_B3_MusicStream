@@ -1,50 +1,47 @@
 package com.example.MusicStream.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.security.Keys;
-import java.util.Base64;
-import javax.crypto.SecretKey;
-import jakarta.annotation.PostConstruct;
 
+import java.security.Key;
 import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}")
-    private String jwtSecretString;
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    private SecretKey jwtSecret;
+    @Value("${app.jwtSecret}")
+    private String jwtSecret;
 
-    @PostConstruct
-    public void init() {
-        byte[] keyBytes = Base64.getDecoder().decode(jwtSecretString);
-        this.jwtSecret = Keys.hmacShaKeyFor(keyBytes);
-    }
-    
-    @Value("${jwt.expiration:86400000}") // 24 hours by default
-    private long jwtExpiration;
+    @Value("${app.jwtExpirationInMs}")
+    private int jwtExpirationInMs;
 
     public String generateToken(Authentication authentication) {
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .setIssuedAt(now)
+                .setSubject(userPrincipal.getUsername())
+                .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
-                .signWith(jwtSecret, SignatureAlgorithm.HS512)
+                .signWith(getSigningKey())
                 .compact();
     }
 
-    public String getUsernameFromToken(String token) {
+    public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -52,15 +49,29 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String authToken) {
         try {
             Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(getSigningKey())
                 .build()
-                .parseClaimsJws(token);
+                .parseClaimsJws(authToken);
             return true;
-        } catch (Exception e) {
-            return false;
+        } catch (SecurityException ex) {
+            logger.error("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            logger.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            logger.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            logger.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            logger.error("JWT claims string is empty");
         }
+        return false;
     }
-} 
+
+    private Key getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+}

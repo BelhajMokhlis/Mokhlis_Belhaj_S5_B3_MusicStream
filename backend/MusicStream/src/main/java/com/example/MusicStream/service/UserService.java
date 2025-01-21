@@ -1,15 +1,16 @@
 package com.example.MusicStream.service;
 
-import com.example.MusicStream.dto.request.LoginRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.example.MusicStream.dto.request.UserRequest;
-import com.example.MusicStream.dto.request.UpdateRoleRequest;
-import com.example.MusicStream.dto.response.LoginResponse;
 import com.example.MusicStream.dto.response.UserResponse;
-import java.util.List;
 
 public interface UserService {
-    LoginResponse login(LoginRequest request);
-    UserResponse register(UserRequest request);
-    List<UserResponse> getAllUsers();
-    UserResponse updateUserRoles(String id, UpdateRoleRequest request);
-} 
+    
+    public Page<UserResponse> getAllUsers(Pageable pageable);
+    public UserResponse registerUser(UserRequest request);
+    public void deleteUser(String id);
+    public UserResponse assignRoleToUser(String userId, String roleId);
+    public void desassignRoleToUser(String userId, String roleId);
+}

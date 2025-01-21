@@ -1,20 +1,16 @@
 package com.example.MusicStream.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserRequest {
-    @NotBlank(message = "Login is required")
-    @Size(min = 3, max = 50, message = "Login must be between 3 and 50 characters")
-    private String login;
-
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
+    @NotBlank(message = "Le nom d'utilisateur est obligatoire")
+    private String username;
+    @NotBlank(message = "Le mot de passe est obligatoire")
     private String password;
-} 
+    private List<RoleRequest> roles;
+}
+

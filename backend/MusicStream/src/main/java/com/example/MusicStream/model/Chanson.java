@@ -25,8 +25,7 @@ public class Chanson {
     
     private String categorie;
     private Date dateAjout = new Date();
-    private String audioFileId;  // GridFS file reference
-    
+    private String audioFileId;  
     @Field("album_id")
-    private String albumId;  // Reference to the parent album
+    private String albumId;  
 } 

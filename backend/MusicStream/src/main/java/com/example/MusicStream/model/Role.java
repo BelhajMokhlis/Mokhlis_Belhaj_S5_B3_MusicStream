@@ -1,6 +1,15 @@
 package com.example.MusicStream.model;
 
-public enum Role {
-    ROLE_USER,
-    ROLE_ADMIN
-} 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.Data;
+
+@Data
+@Document(collection = "roles")
+public class Role {
+       @Id
+    private String id;
+
+    private String name;
+}
