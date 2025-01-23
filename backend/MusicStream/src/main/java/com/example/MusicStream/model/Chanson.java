@@ -1,9 +1,9 @@
 package com.example.MusicStream.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Field;
 import jakarta.validation.constraints.Size;
 import java.util.Date;
 
@@ -16,8 +16,8 @@ public class Chanson {
     @Id
     private String id;
     
-    private String titre;
-    private Integer duree;
+    private String title;
+    private Integer duration;
     private Integer trackNumber;
     
     @Size(max = 200)
@@ -26,6 +26,6 @@ public class Chanson {
     private String categorie;
     private Date dateAjout = new Date();
     private String audioFileId;  
-    @Field("album_id")
-    private String albumId;  
+     @DBRef
+    private Album album; 
 } 

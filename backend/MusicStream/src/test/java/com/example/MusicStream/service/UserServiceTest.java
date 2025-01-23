@@ -5,7 +5,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.lenient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,6 @@ import com.example.MusicStream.repository.RoleRepository;
 import com.example.MusicStream.repository.UserRepository;
 import com.example.MusicStream.service.impl.UserServiceImpl;
 import com.example.MusicStream.mapper.UserMapper;
-import com.example.MusicStream.service.RoleService;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
