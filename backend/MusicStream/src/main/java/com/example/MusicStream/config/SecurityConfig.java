@@ -39,11 +39,11 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/auth/**","/swagger-ui/**", "/v3/api-docs/**").permitAll()
                  .requestMatchers("/api/admin/**").hasRole("ADMIN")
                  .requestMatchers("/api/users/**").hasAnyRole("USER","ADMIN") 
                 .anyRequest().authenticated()
-            )
+f            )
             .logout(logout -> logout
                     .logoutUrl("/api/auth/logout")
                     .logoutSuccessHandler((request, response, authentication) -> {
