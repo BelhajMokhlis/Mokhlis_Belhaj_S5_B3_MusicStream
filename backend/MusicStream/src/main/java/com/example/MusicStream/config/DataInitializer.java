@@ -1,6 +1,5 @@
 package com.example.MusicStream.config;
 
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

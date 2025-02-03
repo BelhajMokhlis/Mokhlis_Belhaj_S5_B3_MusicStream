@@ -1,0 +1,46 @@
+<div class="bg-gray-900 shadow-lg rounded p-3">
+  <div class="group relative">
+    <img class="w-full md:w-72 block rounded" src="https://www.billboard.com/wp-content/uploads/media/streaming-illustration-v-2019-billboard-1548.jpg" alt="Album Art" />
+    <div class="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
+      <button class="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition"
+              (click)="playTrack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="p-5">
+    <!-- Title and main info -->
+    <div class="flex justify-between items-start mb-4">
+      <div>
+        <h3 class="text-white text-lg font-semibold mb-1">{{ track.metadata.title }}</h3>
+        <p class="text-gray-400 italic text-sm">{{ track.metadata.album.title }}</p>
+      </div>
+      <span class="text-sm text-zinc-400">{{ track.metadata.duration | duration }}</span>
+    </div>
+
+    <!-- Additional details -->
+    <div class="flex flex-col gap-2 text-sm">
+      <div class="flex items-center justify-between">
+        <span class="text-gray-400">Genre</span>
+        <span class="text-gray-300">{{ track.metadata.categorie }}</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-gray-400">Added on</span>
+        <time class="text-gray-300" [attr.datetime]="track.metadata.dateAjout | date:'yyyy-MM-dd'">
+          {{ track.metadata.dateAjout | date:'dd/MM/yyyy' }}
+        </time>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="mt-4 flex justify-end gap-2">
+     
+      <button class="text-zinc-400 hover:text-white px-3 py-1 rounded-full hover:bg-zinc-800 transition-colors"
+              (click)="openTrackDetail()">
+        More details
+      </button>
+    </div>
+  </div>
+</div>

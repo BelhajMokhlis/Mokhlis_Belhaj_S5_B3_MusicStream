@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.example.MusicStream.security.CustomUserDetailsService;
 import com.example.MusicStream.security.JwtAuthenticationFilter;
@@ -34,16 +35,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration config = new CorsConfiguration();
+                config.addAllowedOrigin("http://localhost:4200");
+                config.addAllowedMethod("*");
+                config.addAllowedHeader("*");
+                config.setAllowCredentials(true);
+                return config;
+            }))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                 .requestMatchers("/api/users/**").hasAnyRole("USER","ADMIN") 
+                   .requestMatchers("/api/auth/**","/swagger-ui/**", "/v3/api-docs/**","api/admin/**","/api/users/chanson/{id}/stream").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/users/**").hasAnyRole("USER","ADMIN") 
                 .anyRequest().authenticated()
-            )
+                )
             .logout(logout -> logout
                     .logoutUrl("/api/auth/logout")
                     .logoutSuccessHandler((request, response, authentication) -> {

@@ -16,10 +16,10 @@ public class Album {
     @Id
     private String id;
     
-    private String titre;
-    private String artiste;
-    private Integer annee;
-    private String categorie;
+    private String title;
+    private String artist;
+    private Integer releaseYear;
+    private String genre;
     @DBRef
-    private List<String> chansons = new ArrayList<>();  // List of Song IDs
+    private List<Chanson> chansons = new ArrayList<>();  // List of Song IDs
 } 
