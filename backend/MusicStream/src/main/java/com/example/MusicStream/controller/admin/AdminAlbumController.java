@@ -17,6 +17,7 @@ import com.example.MusicStream.service.AlbumService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,6 +26,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/admin/albums")
 @Tag(name = "Admin Album Controller", description = "Gestion des albums par l'administrateur")
+@SecurityRequirement(name = "bearerAuth")
 public class AdminAlbumController {
     
     @Autowired
@@ -40,6 +42,7 @@ public class AdminAlbumController {
     @Operation(summary = "Create a new album", description = "Creates a new album with the provided information")
     @ApiResponse(responseCode = "201", description = "Album successfully created")
     @ApiResponse(responseCode = "400",
+    
      description = "Invalid request body - Validation errors", 
             content = @Content(mediaType = "application/json", schema = @Schema(example = """
         {
@@ -47,6 +50,7 @@ public class AdminAlbumController {
             "status": 400
         }
         """)))
+            
     @PostMapping
     public ResponseEntity<AlbumResponse> createAlbum(@Valid @RequestBody AlbumRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(albumService.createAlbum(request));

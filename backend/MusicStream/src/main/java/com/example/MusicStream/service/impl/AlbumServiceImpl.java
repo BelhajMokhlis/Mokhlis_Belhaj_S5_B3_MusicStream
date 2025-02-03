@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -85,8 +86,8 @@ public class AlbumServiceImpl implements AlbumService {
 
     // all users fonction
     @Override
-    public Page<AlbumResponse> getAllAlbums(Pageable pageable) {
-        Page<Album> albums = albumRepository.findAll(pageable);
+    public Slice<AlbumResponse> getAllAlbums(Pageable pageable) {
+        Slice<Album> albums = albumRepository.findAlbumsWithChansons(pageable);
         return albums.map(albumMapper::toResponse);
     }
 

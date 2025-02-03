@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.material-icons {
+  font-size: 20px;
+}
+
+.router-link-active {
+  background-color: theme('colors.purple.700');
+}

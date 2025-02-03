@@ -1,0 +1,67 @@
+/* Dialog overlay (background) */
+.cdk-global-overlay-wrapper {
+  display: flex;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.cdk-overlay-backdrop {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.32);
+  transition: opacity 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.cdk-overlay-pane {
+  position: absolute;
+  pointer-events: auto;
+  z-index: 1000;
+}
+
+/* Dialog styling */
+.track-detail-dialog {
+  position: relative;
+  z-index: 10000;
+}
+
+.track-detail-dialog .mat-mdc-dialog-container {
+  --mdc-dialog-container-color: transparent !important;
+}
+
+.track-detail-dialog .mat-mdc-dialog-surface {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.mat-mdc-dialog-content {
+  max-height: 85vh;
+  margin: 0;
+  padding: 0;
+}
+
+.cdk-overlay-pane {
+  max-width: 90vw !important;
+} 

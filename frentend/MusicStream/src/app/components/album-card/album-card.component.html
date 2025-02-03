@@ -1,0 +1,35 @@
+<div class="bg-gray-900 shadow-lg rounded-lg p-4">
+   
+    <div class="p-5">
+      <!-- Title and main info -->
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h3 class="text-white text-lg font-semibold mb-1">{{ album.title }}</h3>
+          <p class="text-gray-400 italic text-sm">{{ album.artist }}</p>
+        </div>
+      </div>
+  
+      <!-- Additional details -->
+      <div class="flex flex-col gap-2 text-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-gray-400">Release Year</span>
+          <span class="text-gray-300">{{ album.releaseYear }}</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-gray-400">Genre</span>
+          <span class="text-gray-300">{{ album.genre }}</span>
+        </div>
+       
+      </div>
+  
+      <!-- Action buttons -->
+      <div class="mt-4 flex justify-end gap-2">
+       
+        <a class="text-zinc-400 hover:text-white px-4 py-2 rounded-full hover:bg-zinc-800 transition-colors"
+               [routerLink]="['/album', album.id]">
+          More details
+        </a>
+      </div>
+    </div>
+  </div>
+  

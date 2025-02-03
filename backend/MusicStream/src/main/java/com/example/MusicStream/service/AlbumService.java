@@ -4,6 +4,7 @@ import com.example.MusicStream.dto.request.AlbumRequest;
 import com.example.MusicStream.dto.response.AlbumResponse;
 import com.example.MusicStream.model.Album;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,7 +16,7 @@ public interface AlbumService {
     void deleteAlbum(String id);
 
     // all users fonction
-    Page<AlbumResponse> getAllAlbums(Pageable pageable);
+    Slice<AlbumResponse> getAllAlbums(Pageable pageable);
     Page<AlbumResponse> getAlbumsByTitle(String title, Pageable pageable);
     Page<AlbumResponse> getAlbumsByArtist(String artist, Pageable pageable);
     Page<AlbumResponse> filterAlbumsByYear(int startYear, int endYear, Pageable pageable);

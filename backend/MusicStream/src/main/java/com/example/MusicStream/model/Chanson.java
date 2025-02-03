@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.*;
 import jakarta.validation.constraints.Size;
+
+import java.time.Duration;
 import java.util.Date;
 
 @Data
@@ -17,7 +19,7 @@ public class Chanson {
     private String id;
     
     private String title;
-    private Integer duration;
+    private Duration duration;
     private Integer trackNumber;
     
     @Size(max = 200)
@@ -25,6 +27,7 @@ public class Chanson {
     
     private String categorie;
     private Date dateAjout = new Date();
+
     private String audioFileId;  
      @DBRef
     private Album album; 

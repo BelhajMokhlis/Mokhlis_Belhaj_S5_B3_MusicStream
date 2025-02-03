@@ -1,16 +1,20 @@
-
 package com.example.MusicStream.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.MusicStream.dto.request.ChansonRequest;
 import com.example.MusicStream.dto.response.ChansonResponse;
@@ -26,7 +30,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/admin/chansons")
 @Tag(name = "Admin chansons Controller", description = "Gestion des chansons par l'administrateur")
-public class AdminChansonontroller {
+public class AdminChansonController {
 
     @Autowired
     private ChansonService chansonService;
@@ -48,9 +52,12 @@ public class AdminChansonontroller {
             "status": 400
         }
         """)))
-    @PostMapping
-    public ResponseEntity<ChansonResponse> createchansons( @Valid @RequestBody ChansonRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(chansonService.createChanson(request));
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ChansonResponse> createChansons(
+            @ModelAttribute ChansonRequest request,
+            @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(chansonService.createChanson(request, file));
     }
 
 
@@ -66,9 +73,9 @@ public class AdminChansonontroller {
     )
     @ApiResponse(responseCode = "200", description = "Chanson mise à jour avec succès")
     @ApiResponse(responseCode = "404", description = "Chanson non trouvée")
-    @PutMapping("/{id}")
-    public ResponseEntity<ChansonResponse> updatechansons(@PathVariable String id,  @RequestBody ChansonRequest request) {
-        return ResponseEntity.ok(chansonService.updateChanson(id, request));
+    @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<ChansonResponse> updatechansons(@PathVariable String id, @RequestPart("file") MultipartFile file, @RequestPart("request") ChansonRequest request) {
+        return ResponseEntity.ok(chansonService.updateChanson(id, request, file));
     }
 
     /***

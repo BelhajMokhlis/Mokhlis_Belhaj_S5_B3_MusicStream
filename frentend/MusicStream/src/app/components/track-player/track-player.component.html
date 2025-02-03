@@ -1,0 +1,84 @@
+<footer *ngIf="currentTrack$ | async"  class="fixed bottom-0 left-0 w-full bg-gray-900/95 backdrop-blur-lg border-t border-gray-800 shadow-lg z-50">
+    <div class="container mx-auto px-2 sm:px-4 py-2 sm:py-3 flex flex-col sm:flex-row items-center gap-2 sm:gap-0 sm:justify-between">
+      <!-- Track Information -->
+      <div class="flex items-center space-x-4 w-full sm:w-auto justify-center sm:justify-start">
+        <div class="min-w-0">
+          <p class="text-sm font-semibold text-white truncate text-center sm:text-left">{{ (currentTrack$ | async)?.metadata?.title || 'No Track Selected' }}</p>
+          <p class="text-xs text-gray-400 truncate text-center sm:text-left">{{ (currentTrack$ | async)?.metadata?.album?.artist || 'Unknown Artist' }}</p>
+        </div>
+      </div>
+  
+      <!-- Audio Controls -->
+      <div class="flex flex-col items-center space-y-2 w-full sm:flex-1 sm:max-w-2xl sm:px-4 order-first sm:order-none">
+        <div class="flex items-center space-x-6">
+          <!-- Previous Track Button -->
+          <button class="p-2 text-gray-400 hover:text-white transition-colors" 
+                  [disabled]="!(currentTrack$ | async)"
+                  (click)="playPreviousTrack()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+            </svg>
+          </button>
+  
+          <!-- Play/Pause Button -->
+          <button class="p-2 sm:p-3 bg-red-600 rounded-full hover:bg-red-700 text-white transform hover:scale-105 transition-all duration-200 shadow-lg" 
+                  [disabled]="!(currentTrack$ | async)"
+                  (click)="togglePlay()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path *ngIf="!(isPlaying$ | async)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path *ngIf="isPlaying$ | async" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M10 9v6m4-6v6" />
+            </svg>
+          </button>
+  
+          <!-- Next Track Button -->
+          <button class="p-2 text-gray-400 hover:text-white transition-colors"
+                  [disabled]="!(currentTrack$ | async)"
+                  (click)="playNextTrack()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+  
+        <!-- Progress Bar -->
+        <ng-container *ngIf="progress$ | async as progress">
+          <div class="flex items-center space-x-2 w-full">
+            <span class="text-xs text-gray-400 w-10 sm:w-12 text-right">{{ progress.currentTime }}</span>
+            <div class="relative flex-1 h-1 bg-gray-700 rounded-full">
+              <input
+                type="range"
+                class="absolute w-full h-full opacity-0 cursor-pointer"
+                min="0"
+                max="100"
+                [value]="progress.progress"
+                (input)="seekTo($event)"
+              />
+              <div class="absolute top-0 left-0 h-full bg-red-500 rounded-full" [style.width.%]="progress.progress"></div>
+            </div>
+            <span class="text-xs text-gray-400 w-10 sm:w-12">{{ progress.duration }}</span>
+          </div>
+        </ng-container>
+      </div>
+  
+      <!-- Volume Control -->
+      <div class="hidden sm:flex items-center space-x-3">
+        <button class="p-2 text-gray-400 hover:text-white transition-colors" (click)="toggleMute()">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path *ngIf="(volume$ | async) === 0" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            <path *ngIf="(volume$ | async)! > 0" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+          </svg>
+        </button>
+        <input
+          type="range"
+          class="w-20 h-1 bg-gray-700 rounded appearance-none cursor-pointer"
+          min="0"
+          max="100"
+          [value]="volume$ | async"
+          (input)="setVolume($event)"
+        />
+      </div>
+    </div>
+  </footer>
+    

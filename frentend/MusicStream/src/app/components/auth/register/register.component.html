@@ -1,0 +1,79 @@
+<div class="flex flex-col justify-center items-center bg-zinc-950 h-max min-h-[100vh] pb-5">
+  <div class="mx-auto flex w-full flex-col justify-center px-5 pt-0 md:h-[unset] md:max-w-[50%] lg:h-[100vh] min-h-[100vh] lg:max-w-[50%] lg:px-6">
+    <div class="my-auto mb-auto mt-8 flex flex-col md:mt-[70px] w-[350px] max-w-[450px] mx-auto md:max-w-[450px] lg:mt-[130px] lg:max-w-[450px]">
+      <p class="text-[32px] font-bold text-white">Sign Up</p>
+      <p class="mb-2.5 mt-2.5 font-normal text-zinc-400">Create your account to get started!</p>
+
+      <div class="mt-8">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="grid gap-2">
+          <div class="grid gap-1">
+            <label class="text-white" for="username">Username</label>
+            <input
+              class="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border bg-zinc-950 text-white border-zinc-800 px-4 py-3 text-sm font-medium placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+              id="username"
+              formControlName="username"
+              placeholder="Enter username"
+              type="text"
+              autocomplete="username"
+            />
+            <div *ngIf="registerForm.get('username')?.errors?.['required'] && registerForm.get('username')?.touched" 
+                 class="text-red-500 text-sm">
+              Username is required
+            </div>
+
+            <label class="text-white mt-2" for="email">Email</label>
+            <input
+              class="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border bg-zinc-950 text-white border-zinc-800 px-4 py-3 text-sm font-medium placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+              id="email"
+              formControlName="email"
+              placeholder="name@example.com"
+              type="email"
+              autocomplete="email"
+            />
+            <div *ngIf="registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.touched" 
+                 class="text-red-500 text-sm">
+              Email is required
+            </div>
+            <div *ngIf="registerForm.get('email')?.errors?.['email'] && registerForm.get('email')?.touched" 
+                 class="text-red-500 text-sm">
+              Please enter a valid email
+            </div>
+
+            <label class="text-white mt-2" for="password">Password</label>
+            <input
+              class="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border bg-zinc-950 text-white border-zinc-800 px-4 py-3 text-sm font-medium placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+              id="password"
+              formControlName="password"
+              placeholder="Create a password"
+              type="password"
+              autocomplete="new-password"
+            />
+            <div *ngIf="registerForm.get('password')?.errors?.['required'] && registerForm.get('password')?.touched" 
+                 class="text-red-500 text-sm">
+              Password is required
+            </div>
+            <div *ngIf="registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.touched" 
+                 class="text-red-500 text-sm">
+              Password must be at least 6 characters
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            [disabled]="!registerForm.valid"
+            class="whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white text-zinc-950 hover:bg-white/90 active:bg-white/80 flex w-full max-w-full mt-6 items-center justify-center rounded-lg px-4 py-4 text-base font-medium"
+          >
+            Create Account
+          </button>
+        </form>
+
+        <p class="mt-4 text-center text-sm text-zinc-400">
+          Already have an account?
+          <a routerLink="/login" class="font-medium text-white hover:text-white/80">
+            Sign in
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
