@@ -45,7 +45,7 @@
         >
         <div *ngIf="albumForm.get('releaseYear')?.touched && albumForm.get('releaseYear')?.invalid" class="text-red-500 text-sm mt-1">
           <span *ngIf="albumForm.get('releaseYear')?.errors?.['required']">Release year is required</span>
-          <span *ngIf="albumForm.get('releaseYear')?.errors?.['min']">Year must be 1900 or later</span>
+          <span *ngIf="albumForm.get('releaseYear')?.errors?.['min']">Year must be 1980 or later</span>
           <span *ngIf="albumForm.get('releaseYear')?.errors?.['max']">Year cannot be in the future</span>
         </div>
       </div>

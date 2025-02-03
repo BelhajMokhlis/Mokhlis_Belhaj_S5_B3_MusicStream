@@ -10,14 +10,18 @@
     </div>
 
     <!-- Popup Modal -->
-    <div *ngIf="showAddAlbum" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div *ngIf="showAddAlbum || showEditAlbum" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="relative bg-zinc-900 rounded-xl shadow-lg max-w-md w-full m-4">
-            <button (click)="toggleAddAlbum()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+            <button (click)="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
-            <app-add-album (albumAdded)="toggleAddAlbum()"></app-add-album>
+            <app-add-album 
+                [albumToEdit]="selectedAlbum"
+                (albumAdded)="onAlbumAdded()"
+                (albumEdited)="onAlbumEdited()">
+            </app-add-album>
         </div>
     </div>
 
@@ -50,10 +54,10 @@
                         <td class="text-gray-300 p-4">{{album.genre}}</td>
                         <td class="text-gray-300 p-4">
                             <div class="flex gap-3">
-                                <button class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors">
+                                <button (click)="editAlbum(album)" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors">
                                     <span>Edit</span>
                                 </button>
-                                <button class="flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors">
+                                <button class="flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors" (click)="deleteAlbum(album.id)">
                                     <span>Delete</span>
                                 </button>
                             </div>

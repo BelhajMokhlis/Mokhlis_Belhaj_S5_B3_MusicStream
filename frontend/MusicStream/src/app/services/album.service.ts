@@ -30,22 +30,16 @@ export class AlbumService {
     return this.http.get<Album[]>(this.apiUrl);
   }
 
- 
-
-  
-
   addAlbum(album: Album): Observable<Album> {
     return this.http.post<Album>(this.adminUrl, album);
   }
 
-  updateAlbum(album: Album): Observable<Album> {
-    const formData = new FormData();
-    formData.append('album', JSON.stringify(album));
-    return this.http.put<Album>(`${this.adminUrl}/${album.id}`, formData);
+  updateAlbum(id: string, album: Album): Observable<any> {
+    return this.http.put(`${this.adminUrl}/update?id=${id}`, album);
   }
 
   deleteAlbum(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.adminUrl}/${id}`);
+    return this.http.delete<void>(`${this.adminUrl}/delete?id=${id}`);
   }
 
   getAlbumDetails(id: string): Observable<Album> {

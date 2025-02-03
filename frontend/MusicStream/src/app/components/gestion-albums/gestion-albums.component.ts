@@ -14,6 +14,7 @@ import { AddAlbumComponent } from '../add-album/add-album.component';
 })
 export class GestionAlbumsComponent implements OnInit {
   showAddAlbum = false;
+  showEditAlbum = false;
   albums: Album[] = [];
   filteredAlbums: Album[] = [];
   paginatedAlbums: Album[] = [];
@@ -21,6 +22,7 @@ export class GestionAlbumsComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 5;
   totalPages: number = 0;
+  selectedAlbum: Album | null = null;
 
   constructor(private albumService: AlbumService) {}
 
@@ -68,5 +70,40 @@ export class GestionAlbumsComponent implements OnInit {
 
   toggleAddAlbum() {
     this.showAddAlbum = !this.showAddAlbum;
+  }
+
+  deleteAlbum(id: string) {
+    this.albumService.deleteAlbum(id).subscribe(() => {
+      this.albums = this.albums.filter(album => album.id !== id);
+      this.filterAlbums();
+    });
+  }
+
+  editAlbum(album: Album) {
+    this.selectedAlbum = album;
+    this.showEditAlbum = true;
+  }
+
+  closeModal() {
+    this.showAddAlbum = false;
+    this.showEditAlbum = false;
+    this.selectedAlbum = null;
+  }
+
+  onAlbumAdded() {
+    this.closeModal();
+    this.loadAlbums();
+  }
+
+  onAlbumEdited() {
+    this.closeModal();
+    this.loadAlbums();
+  }
+
+  loadAlbums() {
+    this.albumService.getAlbums().subscribe(albums => {
+      this.albums = albums;
+      this.filterAlbums();
+    });
   }
 }
