@@ -10,6 +10,7 @@ import { Page } from '../models/page.model';
 export class TrackService {
   private apiUrl = 'http://localhost:8080/api/users/chanson';
   private baseUrl = 'http://localhost:8080';
+  private adminUrl = 'http://localhost:8080/api/admin/chansons';
 
   private currentTrackSubject = new BehaviorSubject<Track | null>(null);
   currentTrack$ = this.currentTrackSubject.asObservable();
@@ -49,24 +50,28 @@ export class TrackService {
     });
   }
 
-  addTrack(track: Track, audioFile: File): Observable<Track> {
+  addTrack(file: File, otherData: any): Observable<Track> {
     const formData = new FormData();
-    formData.append('track', JSON.stringify(track));
-    formData.append('audioFile', audioFile);
-    return this.http.post<Track>(this.apiUrl, formData);
+    formData.append('file', file);
+    // Add other form data as needed
+    for (const key in otherData) {
+      if (otherData.hasOwnProperty(key)) {
+        formData.append(key, otherData[key]);
+      }
+    }
+    return this.http.post<Track>(this.adminUrl, formData);
   }
 
-  updateTrack(track: Track, audioFile?: File): Observable<Track> {
-    const formData = new FormData();
-    formData.append('track', JSON.stringify(track));
-    if (audioFile) {
-      formData.append('audioFile', audioFile);
-    }
-    return this.http.put<Track>(`${this.apiUrl}/${track.metadata.id}`, formData);
+  updateTrack(id: string, data: FormData): Observable<any> {
+    const trackData = JSON.parse(data.get('track') as string);
+    
+    return this.http.put(`${this.adminUrl}/${id}`, trackData, {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   deleteTrack(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.adminUrl}/${id}`);
   }
 
   searchTracks(query: string): Observable<Track[]> {

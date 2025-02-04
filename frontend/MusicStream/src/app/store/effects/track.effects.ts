@@ -21,24 +21,34 @@ export class TrackEffects {
   addTrack$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TrackActions.addTrack),
-      switchMap(({ track, audioFile }) =>
-        this.trackService.addTrack(track, audioFile).pipe(
+      switchMap(({ track, audioFile }) => {
+        const formData = new FormData();
+        formData.append('track', JSON.stringify(track));
+        if (audioFile) {
+          formData.append('file', audioFile);
+        }
+        return this.trackService.addTrack(audioFile, track).pipe(
           map(newTrack => TrackActions.addTrackSuccess({ track: newTrack })),
           catchError(error => of(TrackActions.addTrackFailure({ error })))
-        )
-      )
+        );
+      })
     )
   );
 
   updateTrack$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TrackActions.updateTrack),
-      switchMap(({ track, audioFile }) =>
-        this.trackService.updateTrack(track, audioFile).pipe(
+      switchMap(({ track, audioFile }) => {
+        const formData = new FormData();
+        formData.append('track', JSON.stringify(track));
+        if (audioFile) {
+          formData.append('file', audioFile);
+        }
+        return this.trackService.updateTrack(track.metadata.id, formData).pipe(
           map(updatedTrack => TrackActions.updateTrackSuccess({ track: updatedTrack })),
           catchError(error => of(TrackActions.updateTrackFailure({ error })))
-        )
-      )
+        );
+      })
     )
   );
 

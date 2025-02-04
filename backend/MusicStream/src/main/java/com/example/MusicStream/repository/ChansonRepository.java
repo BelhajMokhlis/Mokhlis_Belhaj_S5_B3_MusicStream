@@ -12,7 +12,6 @@ import java.util.List;
 public interface ChansonRepository extends MongoRepository<Chanson, String> {
 
     // get the Chansons by album id
-    List<Chanson> findByAlbumId(String albumId);
 
     // for the client
     Page<Chanson> findByTitleContaining(String title, Pageable pageable);

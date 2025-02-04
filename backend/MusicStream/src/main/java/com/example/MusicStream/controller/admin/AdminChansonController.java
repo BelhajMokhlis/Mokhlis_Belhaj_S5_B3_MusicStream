@@ -58,6 +58,7 @@ public class AdminChansonController {
             @RequestPart("file") MultipartFile file) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(chansonService.createChanson(request, file));
+        
     }
 
 
@@ -73,9 +74,9 @@ public class AdminChansonController {
     )
     @ApiResponse(responseCode = "200", description = "Chanson mise à jour avec succès")
     @ApiResponse(responseCode = "404", description = "Chanson non trouvée")
-    @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<ChansonResponse> updatechansons(@PathVariable String id, @RequestPart("file") MultipartFile file, @RequestPart("request") ChansonRequest request) {
-        return ResponseEntity.ok(chansonService.updateChanson(id, request, file));
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<ChansonResponse> updatechansons(@PathVariable String id, @RequestBody ChansonRequest request) {
+        return ResponseEntity.ok(chansonService.updateChanson(id, request));
     }
 
     /***

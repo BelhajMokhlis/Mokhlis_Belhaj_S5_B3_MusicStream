@@ -14,7 +14,7 @@ import com.example.MusicStream.dto.response.ChansonResponse;
 public interface ChansonService {
     // admin fonctions
     ChansonResponse createChanson(ChansonRequest request, MultipartFile file);
-    ChansonResponse updateChanson(String id, ChansonRequest request, MultipartFile file);
+    ChansonResponse updateChanson(String id, ChansonRequest request);
     boolean deleteChanson(String id);
 
     // client fonctions

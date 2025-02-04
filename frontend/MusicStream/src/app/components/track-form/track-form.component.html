@@ -1,0 +1,82 @@
+<form [formGroup]="trackForm" (ngSubmit)="onSubmit()" class="space-y-4 p-6 bg-zinc-900 rounded-xl shadow-lg">
+    <h2 class="text-2xl font-bold text-white mb-6">{{ isEditMode ? 'Edit Track' : 'Add New Track' }}</h2>
+
+    <div>
+        <label for="title" class="block text-sm font-medium text-gray-300 mb-1">Titre :</label>
+        <input type="text" id="title" formControlName="title" 
+               class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+               [ngClass]="{ 'border-red-500': submitted && f['title'].errors }"
+               placeholder="Enter track title">
+        <div *ngIf="submitted && f['title'].errors" class="text-red-500 text-sm mt-1">
+            <span *ngIf="f['title'].errors['required']">Title is required</span>
+            <span *ngIf="f['title'].errors['minlength']">Title must be at least 2 characters</span>
+        </div>
+    </div>
+
+    <div>
+        <label for="trackNumber" class="block text-sm font-medium text-gray-300 mb-1">Numéro de Piste :</label>
+        <input type="number" id="trackNumber" formControlName="trackNumber"
+               class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+               [ngClass]="{ 'border-red-500': submitted && f['trackNumber'].errors }"
+               placeholder="Enter track number">
+        <div *ngIf="submitted && f['trackNumber'].errors" class="text-red-500 text-sm mt-1">
+            <span *ngIf="f['trackNumber'].errors['required']">Track number is required</span>
+            <span *ngIf="f['trackNumber'].errors['min']">Track number must be greater than 0</span>
+        </div>
+    </div>
+
+    <div>
+        <label for="description" class="block text-sm font-medium text-gray-300 mb-1">Description :</label>
+        <textarea id="description" formControlName="description" rows="4"
+                  class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+                  [ngClass]="{ 'border-red-500': submitted && f['description'].errors }"
+                  placeholder="Enter description"></textarea>
+        <div *ngIf="submitted && f['description'].errors?.['maxlength']" class="text-red-500 text-sm mt-1">
+            Description must be less than 500 characters
+        </div>
+    </div>
+
+    <div>
+        <label for="categorie" class="block text-sm font-medium text-gray-300 mb-1">Catégorie :</label>
+        <input type="text" id="categorie" formControlName="categorie"
+               class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+               [ngClass]="{ 'border-red-500': submitted && f['categorie'].errors }"
+               placeholder="Enter category">
+        <div *ngIf="submitted && f['categorie'].errors" class="text-red-500 text-sm mt-1">
+            <span *ngIf="f['categorie'].errors['required']">Category is required</span>
+            <span *ngIf="f['categorie'].errors['minlength']">Category must be at least 2 characters</span>
+        </div>
+    </div>
+
+    <div>
+        <label for="albumId" class="block text-sm font-medium text-gray-300 mb-1">Album :</label>
+        <select id="albumId" formControlName="albumId"
+                class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+                [ngClass]="{ 'border-red-500': submitted && f['albumId'].errors }">
+            <option value="">Sélectionnez un album</option>
+            <option *ngFor="let album of albums" [value]="album.id">{{ album.title }}</option>
+        </select>
+        <div *ngIf="submitted && f['albumId'].errors?.['required']" class="text-red-500 text-sm mt-1">
+            Album selection is required
+        </div>
+    </div>
+
+    <div *ngIf="!isEditMode">
+        <label for="file" class="block text-sm font-medium text-gray-300 mb-1">
+            {{ isEditMode ? 'Nouveau Fichier Audio (optionnel) :' : 'Fichier Audio :' }}
+        </label>
+        <input type="file" id="file" (change)="onFileSelected($event)" accept=".mp3, .wav"
+               class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+               [ngClass]="{ 'border-red-500': submitted && !isEditMode && !selectedFile }">
+        <div *ngIf="submitted && !isEditMode && !selectedFile" class="text-red-500 text-sm mt-1">
+            Audio file is required for new tracks
+        </div>
+    </div>
+
+    <div class="flex justify-end gap-4">
+        <button type="submit" 
+                class="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            {{ isEditMode ? 'Update Track' : 'Add Track' }}
+        </button>
+    </div>
+</form>

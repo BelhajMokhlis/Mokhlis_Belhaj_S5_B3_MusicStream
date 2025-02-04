@@ -112,7 +112,7 @@ public class ClientChansonController {
                                                           @RequestParam(defaultValue = "id") String sortBy,
                                                           @RequestParam(defaultValue = "asc") String sortOrder) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
-        Page<Map<String, Object>> chansons = chansonService.getAllChansonsWithAudio(pageable);
+        Page<Map<String, Object>> chansons = chansonService.getAllChansonsByAlbumId(albumId, pageable);
         return ResponseEntity.ok(chansons);
     }
 }

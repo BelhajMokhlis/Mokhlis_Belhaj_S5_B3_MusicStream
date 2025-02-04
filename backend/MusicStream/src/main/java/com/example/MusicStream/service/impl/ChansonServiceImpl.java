@@ -99,21 +99,9 @@ public class ChansonServiceImpl implements ChansonService {
     }
 
     @Override
-    public ChansonResponse updateChanson(String id, ChansonRequest request, MultipartFile audioFile) {
+    public ChansonResponse updateChanson(String id, ChansonRequest request) {
         Chanson chanson = chansonRepository.findById(id).orElseThrow(() -> new ResponseException("Chanson non trouvée", HttpStatus.NOT_FOUND));
         
-        if (audioFile != null && !audioFile.isEmpty()) {
-            try {
-                ObjectId fileId = gridFsTemplate.store(
-                    audioFile.getInputStream(),
-                    audioFile.getOriginalFilename(),
-                    audioFile.getContentType()
-                );
-                chanson.setAudioFileId(fileId.toString());
-            } catch (IOException e) {
-                throw new ResponseException("Erreur lors du stockage du fichier audio", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
 
         if (request.getTitle() == null && request.getDuration() == null && request.getTrackNumber() == null) {
             throw new ResponseException("Aucune information fournie", HttpStatus.BAD_REQUEST);
@@ -172,6 +160,9 @@ public class ChansonServiceImpl implements ChansonService {
     @Override
     public Page<ChansonResponse> getAllChansonsByAlbum(String album, Pageable pageable) {
         Page<Chanson> chansons = chansonRepository.findByAlbumId(album, pageable);
+        if(chansons.isEmpty()){
+            throw new ResponseException("Aucune chanson trouvée", HttpStatus.NOT_FOUND);
+        }
         return chansons.map(chansonMapper::toResponse);
     }
 
