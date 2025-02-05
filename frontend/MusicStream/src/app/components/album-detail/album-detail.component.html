@@ -3,6 +3,34 @@
       <app-nav-bar></app-nav-bar>
       <div class="mt-8">
         <h1 class="text-4xl font-bold mb-4">Album Details</h1>
+        <div class="flex flex-col md:flex-row gap-8 items-center">
+          <div class="">
+            <div class="">
+              <div class="flex items-center space-x-4">
+                <div class="flex-grow">
+                  <h1 class="text-white">
+                    {{ album?.title }}
+                  </h1>
+                  <div class="space-y-1">
+                    <p class="text-white text-xl font-semibold flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                      </svg>
+                      {{ album?.artist }}
+                    </p>
+                    <p class="text-white text-lg flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                      </svg>
+                      {{ album?.genre }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ---------------------------------------------------------- -->
+        </div>
         <div class="mt-8">
             <div class="flex flex-col  mb-6">
               <h1 class="text-4xl font-bold">Chansons</h1>
@@ -12,7 +40,7 @@
                   [(ngModel)]="searchQuery" 
                   (input)="filterTracks()"
                   placeholder="Rechercher une chanson..." 
-                  class="bg-zinc-800 w-1/6 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  class="bg-zinc-800 w-full md:w-1/6 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                 >
               </div>
             </div>

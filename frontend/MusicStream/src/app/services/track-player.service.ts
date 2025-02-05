@@ -85,9 +85,16 @@ export class TrackPlayerService {
   }
 
   playPreviousTrack(): void {
+    console.log("playPreviousTrack");
     const tracks = this.currentAlbumTracksSubject.value;
     const currentTrack = this.currentTrackSubject.value;
+
     if (!tracks.length || !currentTrack) return;
+
+    if (this.audio.currentTime > 3) {
+      this.audio.currentTime = 0;
+      return;
+    }
 
     const currentIndex = tracks.findIndex(t => t.metadata.id === currentTrack.metadata.id);
     const prevIndex = currentIndex === 0 ? tracks.length - 1 : currentIndex - 1;
@@ -143,7 +150,24 @@ export class TrackPlayerService {
 
     this.audio.addEventListener('ended', () => {
       this.isPlayingSubject.next(false);
-      this.playNextTrack();
+      const tracks = this.currentAlbumTracksSubject.value;
+      const currentTrack = this.currentTrackSubject.value;
+      if (tracks.length && currentTrack) {
+        const currentIndex = tracks.findIndex(t => t.metadata.id === currentTrack.metadata.id);
+        const nextIndex = (currentIndex + 1) % tracks.length;
+        this.loadTrack(tracks[nextIndex]);
+        this.audio.play().then(() => {
+          this.isPlayingSubject.next(true);
+        }).catch(error => {
+          console.error('Error auto-playing next track:', error);
+          this.isPlayingSubject.next(false);
+        });
+      }
+    });
+
+    this.audio.addEventListener('error', (e) => {
+      console.error('Audio playback error:', e);
+      this.isPlayingSubject.next(false);
     });
   }
 

@@ -43,6 +43,6 @@ export class AlbumService {
   }
 
   getAlbumDetails(id: string): Observable<Album> {
-    return this.http.get<Album>(`${this.apiUrl}/albums/${id}`);
+    return this.http.get<Album>(`${this.apiUrl}/${id}`);
   }
 } 

@@ -1,0 +1,25 @@
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+networks:
+  app-network:
+    driver: bridge 
