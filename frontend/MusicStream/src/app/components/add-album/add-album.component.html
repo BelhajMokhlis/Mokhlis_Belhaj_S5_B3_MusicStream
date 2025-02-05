@@ -1,0 +1,81 @@
+<div class="min-h-fit bg-zinc-950 p-8">
+  <div class="max-w-md mx-auto bg-zinc-900 rounded-xl shadow-lg p-6">
+    <h2 class="text-2xl font-bold text-white mb-6">Add New Album</h2>
+    
+    <form [formGroup]="albumForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Title Field -->
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-300 mb-1">Title</label>
+        <input
+          type="text"
+          id="title"
+          formControlName="title"
+          class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+          placeholder="Enter album title"
+        >
+        <div *ngIf="albumForm.get('title')?.touched && albumForm.get('title')?.invalid" class="text-red-500 text-sm mt-1">
+          Title is required
+        </div>
+      </div>
+
+      <!-- Artist Field -->
+      <div>
+        <label for="artist" class="block text-sm font-medium text-gray-300 mb-1">Artist</label>
+        <input
+          type="text"
+          id="artist"
+          formControlName="artist"
+          class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+          placeholder="Enter artist name"
+        >
+        <div *ngIf="albumForm.get('artist')?.touched && albumForm.get('artist')?.invalid" class="text-red-500 text-sm mt-1">
+          Artist is required
+        </div>
+      </div>
+
+      <!-- Release Year Field -->
+      <div>
+        <label for="releaseYear" class="block text-sm font-medium text-gray-300 mb-1">Release Year</label>
+        <input
+          type="number"
+          id="releaseYear"
+          formControlName="releaseYear"
+          class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+          placeholder="Enter release year"
+        >
+        <div *ngIf="albumForm.get('releaseYear')?.touched && albumForm.get('releaseYear')?.invalid" class="text-red-500 text-sm mt-1">
+          <span *ngIf="albumForm.get('releaseYear')?.errors?.['required']">Release year is required</span>
+          <span *ngIf="albumForm.get('releaseYear')?.errors?.['min']">Year must be 1980 or later</span>
+          <span *ngIf="albumForm.get('releaseYear')?.errors?.['max']">Year cannot be in the future</span>
+        </div>
+      </div>
+
+      <!-- Genre Field -->
+      <div>
+        <label for="genre" class="block text-sm font-medium text-gray-300 mb-1">Genre</label>
+        <input
+          type="text"
+          id="genre"
+          formControlName="genre"
+          class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-purple-500 text-white"
+          placeholder="Enter genre"
+        >
+        <div *ngIf="albumForm.get('genre')?.touched && albumForm.get('genre')?.invalid" class="text-red-500 text-sm mt-1">
+          Genre is required
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-end gap-4">
+         
+        <button
+          type="submit"
+          [disabled]="!albumForm.valid"
+          class="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Add Album
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

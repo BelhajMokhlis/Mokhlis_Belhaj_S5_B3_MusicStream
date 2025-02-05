@@ -6,12 +6,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.MusicStream.dto.response.AlbumResponse;
+import com.example.MusicStream.mapper.AlbumMapper;
+import com.example.MusicStream.model.Album;
 import com.example.MusicStream.service.AlbumService;
 
 
@@ -31,6 +35,8 @@ public class UsersAlbumController {
     @Autowired
     private AlbumService albumService;
 
+    @Autowired
+    private AlbumMapper albumMapper;
 
     /** 
      * Get all albums
@@ -155,6 +161,15 @@ public class UsersAlbumController {
             @RequestParam(defaultValue = "asc") String sortOrder) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
         return albumService.filterAlbumsByYear(startYear, endYear, pageable);
+    }
+
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AlbumResponse> getAlbumById(@PathVariable String id) {
+        Album album = albumService.getAlbumById(id);
+        AlbumResponse response = albumMapper.toResponse(album);
+        return ResponseEntity.ok(response);
     }
 
 }

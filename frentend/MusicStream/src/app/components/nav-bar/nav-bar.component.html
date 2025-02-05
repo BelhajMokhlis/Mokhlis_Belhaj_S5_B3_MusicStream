@@ -1,7 +1,0 @@
-    <div class="flex justify-between items-center p-4  text-white mb-8">
-      <a [routerLink]="'/home'" class="text-4xl font-bold">Music Stream</a>
-      <div class="flex gap-4 items-center">
-        <a *ngIf="isAdmin" [routerLink]="'/dashboard'" class="text-2xl font-bold">Dashboard</a>
-        <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-300" (click)="logout()">Logout</button>
-      </div>
-    </div>
